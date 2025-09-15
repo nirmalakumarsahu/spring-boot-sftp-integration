@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # MySQL Container Configuration
+  mysql:
+    image: mysql:latest
+    container_name: mysql_ms
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: microservices
+      MYSQL_USER: nirmala
+      MYSQL_PASSWORD: nirmala@123
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mysql_network
+
+volumes:
+  mysql_data:
+
+networks:
+  mysql_network:
+    driver: bridge
