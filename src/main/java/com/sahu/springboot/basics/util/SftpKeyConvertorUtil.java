@@ -1,5 +1,6 @@
 package com.sahu.springboot.basics.util;
 
+import com.sahu.springboot.basics.constant.AppConstants;
 import com.sahu.springboot.basics.exception.InvalidSftpKeyFileException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +14,6 @@ import java.util.Objects;
 @Slf4j
 @UtilityClass
 public class SftpKeyConvertorUtil {
-
-    private final String PEM_KEY_BEGIN = "-----BEGIN RSA PRIVATE KEY-----";
-    private final String PEM_KEY_END = "-----END RSA PRIVATE KEY-----";
-    private final String PPK_KEY_BEGIN = "PuTTY-User-Key-File";
-    private final String PPK_KEY_PUBLIC_LINES = "Public-Lines";
-    private final String PPK_KEY_PRIVATE_LINES = "Private-Lines";
-
 
     public String convertPemKey(MultipartFile pemFile) {
         log.info("Convert PEM key started");
@@ -36,8 +30,8 @@ public class SftpKeyConvertorUtil {
             log.debug("PEM Private key content : {}", pemPrivateKey);
             log.info("Convert PEM key completed");
 
-            if (pemPrivateKey.isBlank() || !pemPrivateKey.startsWith(PEM_KEY_BEGIN) ||
-                    !pemPrivateKey.contains(PEM_KEY_END)) {
+            if (pemPrivateKey.isBlank() || !pemPrivateKey.startsWith(AppConstants.PEM_KEY_BEGIN) ||
+                    !pemPrivateKey.contains(AppConstants.PEM_KEY_END)) {
                 throw new InvalidSftpKeyFileException("Invalid SFTP Key File. Please upload valid .pem file");
             }
 
@@ -63,9 +57,9 @@ public class SftpKeyConvertorUtil {
             log.debug("PPK Private key content : {}", ppkPrivateKey);
             log.info("Convert PPK key completed");
 
-            if (ppkPrivateKey.isBlank() || !ppkPrivateKey.startsWith(PPK_KEY_BEGIN) ||
-                    !ppkPrivateKey.contains(PPK_KEY_PUBLIC_LINES) ||
-                    !ppkPrivateKey.contains(PPK_KEY_PRIVATE_LINES)) {
+            if (ppkPrivateKey.isBlank() || !ppkPrivateKey.startsWith(AppConstants.PPK_KEY_BEGIN) ||
+                    !ppkPrivateKey.contains(AppConstants.PPK_KEY_PUBLIC_LINES) ||
+                    !ppkPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_LINES)) {
                 throw new InvalidSftpKeyFileException("Invalid SFTP Key File. Please upload valid .ppk file");
             }
 
