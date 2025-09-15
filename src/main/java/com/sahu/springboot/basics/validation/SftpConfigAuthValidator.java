@@ -100,7 +100,8 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
 
         if (decodedPrivateKey.isBlank() || !decodedPrivateKey.startsWith(AppConstants.PPK_KEY_BEGIN) ||
                 !decodedPrivateKey.contains(AppConstants.PPK_KEY_PUBLIC_LINES) ||
-                !decodedPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_LINES)) {
+                !decodedPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_LINES) ||
+                !decodedPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_MAC)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Not a valid PEM key")
                     .addPropertyNode(AppConstants.PROPERTY_PRIVATE_KEY)

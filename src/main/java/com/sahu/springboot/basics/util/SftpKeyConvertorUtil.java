@@ -59,7 +59,8 @@ public class SftpKeyConvertorUtil {
 
             if (ppkPrivateKey.isBlank() || !ppkPrivateKey.startsWith(AppConstants.PPK_KEY_BEGIN) ||
                     !ppkPrivateKey.contains(AppConstants.PPK_KEY_PUBLIC_LINES) ||
-                    !ppkPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_LINES)) {
+                    !ppkPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_LINES) ||
+                    !ppkPrivateKey.contains(AppConstants.PPK_KEY_PRIVATE_MAC)) {
                 throw new InvalidSftpKeyFileException("Invalid SFTP Key File. Please upload valid .ppk file");
             }
 
