@@ -15,6 +15,7 @@ import lombok.Setter;
 @Table(name = "sftp_configs")
 public class SftpConfig {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Column(nullable = false)
@@ -29,6 +30,7 @@ public class SftpConfig {
     private String password;
     @Enumerated(EnumType.STRING)
     private KeyFormat keyFormat;
+    @Column(columnDefinition = "TEXT")
     private String privateKey;
     private String passphrase;
     @Column(nullable = false)
