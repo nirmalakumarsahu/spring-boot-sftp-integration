@@ -39,7 +39,7 @@ spring:
 # Logging Configuration
 logging:
   level:
-    com.sahu.springboot.basics: info
+    com.sahu.springboot.basics: debug
 
 # Swagger Configuration
 springdoc:
