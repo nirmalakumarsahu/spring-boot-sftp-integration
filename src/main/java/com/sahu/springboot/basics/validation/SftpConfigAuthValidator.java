@@ -46,19 +46,19 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
             }
 
             //Validate privateKey based on keyFormat
-            //If keyFormat is PEM, privateKey must be a valid PEM key
             if (sftpConfigRequest.keyFormat().equals(KeyFormat.PEM)) {
-               return checkValidPemKey(sftpConfigRequest, context);
+                //If keyFormat is PEM, privateKey must be a valid PEM key
+                return checkValidPemKey(sftpConfigRequest, context);
+            } else if (sftpConfigRequest.keyFormat().equals(KeyFormat.PPK)) {
+                //If keyFormat is PPK, privateKey must be a valid PPK key
+                return checkValidPpkKey(sftpConfigRequest, context);
             }
-
-            //If keyFormat is PPK, privateKey must be a valid PPK key
-            return checkValidPpkKey(sftpConfigRequest, context);
         }
 
         return true;
     }
 
-    private boolean checkValidPemKey(SftpConfigRequest sftpConfigRequest,  ConstraintValidatorContext context) {
+    private boolean checkValidPemKey(SftpConfigRequest sftpConfigRequest, ConstraintValidatorContext context) {
         byte[] decodedBytes = Base64.getDecoder().decode(sftpConfigRequest.privateKey());
         String decodedPrivateKey = new String(decodedBytes, StandardCharsets.UTF_8);
 
@@ -74,7 +74,7 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         return true;
     }
 
-    private boolean checkValidPpkKey(SftpConfigRequest sftpConfigRequest,  ConstraintValidatorContext context) {
+    private boolean checkValidPpkKey(SftpConfigRequest sftpConfigRequest, ConstraintValidatorContext context) {
         byte[] decodedBytes = Base64.getDecoder().decode(sftpConfigRequest.privateKey());
         String decodedPrivateKey = new String(decodedBytes, StandardCharsets.UTF_8);
 
