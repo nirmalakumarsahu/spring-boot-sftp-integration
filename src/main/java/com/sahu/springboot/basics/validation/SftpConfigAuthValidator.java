@@ -16,16 +16,6 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
     @Override
     public boolean isValid(SftpConfigRequest sftpConfigRequest, ConstraintValidatorContext context) {
         //If authenticationType is PASSWORD, password must be provided
-        if (!(sftpConfigRequest.authenticationType().equals(AuthenticationType.PRIVATE_KEY) ||
-                sftpConfigRequest.authenticationType().equals(AuthenticationType.PASSWORD))) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("authenticationType must be PRIVATE_KEY or PASSWORD, other values are not allowed")
-                    .addPropertyNode("authenticationType")
-                    .addConstraintViolation();
-            return false;
-        }
-
-        //If authenticationType is PASSWORD, password must be provided
         if (sftpConfigRequest.authenticationType().equals(AuthenticationType.PASSWORD) &&
                 (Objects.isNull(sftpConfigRequest.password()) || sftpConfigRequest.password().isBlank())) {
             context.disableDefaultConstraintViolation();
@@ -41,16 +31,6 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
             if (Objects.isNull(sftpConfigRequest.keyFormat())) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("keyFormat must be provided when authenticationType is PRIVATE_KEY")
-                        .addPropertyNode("keyFormat")
-                        .addConstraintViolation();
-                return false;
-            }
-
-            // keyFormat must be either PEM or PPK
-            if (!(sftpConfigRequest.keyFormat().equals(KeyFormat.PEM) ||
-                    sftpConfigRequest.keyFormat().equals(KeyFormat.PPK))) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("keyFormat must be PEM or PPK, other values are not allowed")
                         .addPropertyNode("keyFormat")
                         .addConstraintViolation();
                 return false;

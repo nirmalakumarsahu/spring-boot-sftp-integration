@@ -16,7 +16,7 @@ public class SftpConfigUtil {
                 .name(sftpConfigRequest.name())
                 .host(AseCryptUtil.encrypt(sftpConfigRequest.host(), salt))
                 .port(sftpConfigRequest.port())
-                .username(AseCryptUtil.decrypt(sftpConfigRequest.username(), salt))
+                .username(AseCryptUtil.encrypt(sftpConfigRequest.username(), salt))
                 .authenticationType(sftpConfigRequest.authenticationType())
                 .password(AseCryptUtil.encrypt(sftpConfigRequest.password(), salt))
                 .keyFormat(sftpConfigRequest.keyFormat())

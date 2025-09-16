@@ -41,7 +41,7 @@ public class AseCryptUtil {
 
     public String encrypt(String data, String secretKey) {
         if (Objects.isNull(data) || data.isEmpty() || Objects.isNull(secretKey)) {
-            log.warn("Invalid input for encryption");
+            log.debug("Invalid input for encryption");
             return null;
         }
 
@@ -63,14 +63,14 @@ public class AseCryptUtil {
 
             return Base64.getEncoder().encodeToString(combined);
         } catch (Exception e) {
-            log.error("Error during encryption: {}", e.getMessage(), e);
+            log.error("Error during encryption: {}", e.getMessage());
             return null;
         }
     }
 
     public String decrypt(String encryptedData, String secretKey) {
         if (Objects.isNull(encryptedData) || encryptedData.isEmpty() || Objects.isNull(secretKey)) {
-            log.warn("Invalid input for decryption");
+            log.debug("Invalid input for decryption");
             return null;
         }
 
@@ -93,7 +93,7 @@ public class AseCryptUtil {
 
             return new String(decryptedBytes);
         } catch (Exception e) {
-            log.error("Error during decryption: {}", e.getMessage(), e);
+            log.error("Error during decryption: {}", e.getMessage());
             return null;
         }
     }
