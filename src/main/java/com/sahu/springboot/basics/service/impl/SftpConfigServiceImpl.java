@@ -3,6 +3,7 @@ package com.sahu.springboot.basics.service.impl;
 import com.sahu.springboot.basics.dto.SftpConfigRequest;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
 import com.sahu.springboot.basics.exception.SftpConfigAlreadyExistException;
+import com.sahu.springboot.basics.exception.SftpConfigNotFoundException;
 import com.sahu.springboot.basics.model.SftpConfig;
 import com.sahu.springboot.basics.repository.SftpConfigRepository;
 import com.sahu.springboot.basics.service.SftpConfigService;
@@ -22,17 +23,28 @@ public class SftpConfigServiceImpl implements SftpConfigService {
 
     @Override
     public SftpConfigResponse createSftpConfig(SftpConfigRequest sftpConfigRequest) {
-        if (sftpConfigRepository.existsByName(sftpConfigRequest.name())) {
+        if (sftpConfigRepository.existsByNameAndActive(sftpConfigRequest.name(), true)) {
             log.warn("SFTP Config is already exist with name {}", sftpConfigRequest.name());
             throw new SftpConfigAlreadyExistException("SFTP Config is already exist with name " + sftpConfigRequest.name());
         }
+
         SftpConfig sftpConfig = SftpConfigUtil.toSftpConfig(sftpConfigRequest);
         return SftpConfigUtil.toSftpConfigResponse(sftpConfigRepository.save(sftpConfig));
     }
 
     @Override
     public List<SftpConfigResponse> getAllSftpConfigs() {
-        return List.of();
+        return SftpConfigUtil.toSftpConfigResponseList(sftpConfigRepository.findAll());
     }
+
+    @Override
+    public SftpConfigResponse getDecryptedSftpConfigByName(String name) {
+        return sftpConfigRepository.findByNameAndActive(name, true)
+                .map(SftpConfigUtil::toDecryptSftpConfigResponse)
+                .orElseThrow(() -> new SftpConfigNotFoundException(
+                        "Active SFTP Config not found with name " + name
+                ));
+    }
+
 
 }

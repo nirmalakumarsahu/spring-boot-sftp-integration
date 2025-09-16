@@ -17,6 +17,7 @@ public class SftpConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String name;
     @Column(nullable = false)
     private String host;
@@ -35,6 +36,7 @@ public class SftpConfig {
     private String passphrase;
     @Column(nullable = false)
     private String remoteDirectory;
+    @Column(nullable = false)
     private String salt;
     private Boolean active;
 }

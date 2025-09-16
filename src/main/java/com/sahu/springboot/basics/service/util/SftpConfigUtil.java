@@ -44,4 +44,23 @@ public class SftpConfigUtil {
                 .toList();
     }
 
+    public SftpConfigResponse toDecryptSftpConfigResponse(SftpConfig sftpConfig) {
+        String salt = sftpConfig.getSalt();
+
+        return SftpConfigResponse.builder()
+                .id(sftpConfig.getId())
+                .name(sftpConfig.getName())
+                .host(AseCryptUtil.decrypt(sftpConfig.getHost(), salt))
+                .port(sftpConfig.getPort())
+                .username(AseCryptUtil.decrypt(sftpConfig.getUsername(), salt))
+                .authenticationType(sftpConfig.getAuthenticationType())
+                .password(AseCryptUtil.decrypt(sftpConfig.getPassword(), salt))
+                .keyFormat(sftpConfig.getKeyFormat())
+                .privateKey(AseCryptUtil.decrypt(sftpConfig.getPrivateKey(), salt))
+                .passphrase(AseCryptUtil.decrypt(sftpConfig.getPassphrase(), salt))
+                .remoteDirectory(sftpConfig.getRemoteDirectory())
+                .active(sftpConfig.getActive())
+                .build();
+    }
+
 }
