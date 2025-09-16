@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/sftp-configs")
@@ -20,6 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class SftpConfigRestController {
 
     private final SftpConfigService sftpConfigService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<SftpConfigResponse>>> getAllSftpConfigs() {
+        return ApiResponse.success(HttpStatus.OK, "SFTP Configs Retrieved Successfully",
+                sftpConfigService.getAllSftpConfigs());
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<SftpConfigResponse>> createSftpConfig(@Valid @RequestBody SftpConfigRequest sftpConfigRequest) {

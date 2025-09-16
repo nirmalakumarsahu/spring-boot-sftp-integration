@@ -6,6 +6,8 @@ import com.sahu.springboot.basics.model.SftpConfig;
 import com.sahu.springboot.basics.util.AseCryptUtil;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+
 @UtilityClass
 public class SftpConfigUtil {
 
@@ -34,6 +36,12 @@ public class SftpConfigUtil {
                 .name(sftpConfig.getName())
                 .active(sftpConfig.getActive())
                 .build();
+    }
+
+    public List<SftpConfigResponse> toSftpConfigResponseList(List<SftpConfig> sftpConfigList) {
+        return sftpConfigList.stream()
+                .map(SftpConfigUtil::toSftpConfigResponse)
+                .toList();
     }
 
 }

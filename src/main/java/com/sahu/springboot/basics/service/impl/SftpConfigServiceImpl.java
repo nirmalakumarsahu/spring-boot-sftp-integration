@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,11 @@ public class SftpConfigServiceImpl implements SftpConfigService {
         }
         SftpConfig sftpConfig = SftpConfigUtil.toSftpConfig(sftpConfigRequest);
         return SftpConfigUtil.toSftpConfigResponse(sftpConfigRepository.save(sftpConfig));
+    }
+
+    @Override
+    public List<SftpConfigResponse> getAllSftpConfigs() {
+        return List.of();
     }
 
 }
