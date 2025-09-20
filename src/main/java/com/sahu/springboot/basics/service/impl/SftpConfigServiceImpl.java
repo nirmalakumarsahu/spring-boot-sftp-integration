@@ -51,4 +51,9 @@ public class SftpConfigServiceImpl implements SftpConfigService {
         return SftpConfigUtil.toDecryptSftpConfigResponseList(sftpConfigRepository.findAll());
     }
 
+    @Override
+    public boolean existsByName(String name) {
+        return sftpConfigRepository.existsByNameAndActive(name, true);
+    }
+
 }

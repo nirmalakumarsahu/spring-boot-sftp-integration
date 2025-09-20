@@ -5,7 +5,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.sahu.springboot.basics.constant.AuthenticationType;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
-import com.sahu.springboot.basics.exception.SftpConnectionException;
+import com.sahu.springboot.basics.exception.SftpException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -63,7 +63,7 @@ public class SftpConnectionHandler {
             return channelSftp;
         } catch (Exception e) {
             log.error("Error while creating SFTP channel: {}", e.getMessage());
-            throw new SftpConnectionException("Failed to create SFTP channel " + e.getMessage());
+            throw new SftpException("Failed to create SFTP channel " + e.getMessage());
         }
     }
 
@@ -97,21 +97,23 @@ public class SftpConnectionHandler {
             return fileNames;
         } catch (Exception e) {
             log.error("Error while reading files from SFTP server: {}", e.getMessage());
-            throw new SftpConnectionException("Failed to read files from SFTP server " + e.getMessage());
+            disconnectSftpChannel(channelSftp);
+            throw new SftpException("Failed to read files from SFTP server " + e.getMessage());
         }
     }
 
     public String readFileContentByName(ChannelSftp channelSftp, String remoteDirectory, String fileName) {
         try {
             log.info("Reading file: {} from remote directory: {}", fileName, remoteDirectory);
-            String filePath = remoteDirectory.endsWith("/") ? remoteDirectory + fileName : remoteDirectory + "/" + fileName;
+            String filePath =  remoteDirectory + "/" + fileName;
             byte[] fileContentBytes = channelSftp.get(filePath).readAllBytes();
             String fileContent = new String(fileContentBytes, StandardCharsets.UTF_8);
             log.info("File: {} read successfully, size: {} bytes", fileName, fileContentBytes.length);
             return fileContent;
         } catch (Exception e) {
             log.error("Error while reading file: {} from SFTP server: {}", fileName, e.getMessage());
-            throw new SftpConnectionException("Failed to read file: " + fileName + " from SFTP server " + e.getMessage());
+            disconnectSftpChannel(channelSftp);
+            throw new SftpException("Failed to read file: " + fileName + " from SFTP server " + e.getMessage());
         }
     }
 
