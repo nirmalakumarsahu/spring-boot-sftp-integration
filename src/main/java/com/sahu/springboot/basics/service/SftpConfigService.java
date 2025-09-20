@@ -9,4 +9,6 @@ public interface SftpConfigService {
     SftpConfigResponse createSftpConfig(SftpConfigRequest sftpConfigRequest);
     List<SftpConfigResponse> getAllSftpConfigs();
     SftpConfigResponse getDecryptedSftpConfigByName(String name);
+
+    List<SftpConfigResponse> getAllDecryptedSftpConfigs();
 }

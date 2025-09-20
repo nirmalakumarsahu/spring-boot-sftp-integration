@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
 
+    @ExceptionHandler(SftpConnectionException.class)
+    public ResponseEntity<ApiResponse<String>> handleSftpConnectionException(SftpConnectionException exception) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), null);
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleGenericException(Exception exception) {

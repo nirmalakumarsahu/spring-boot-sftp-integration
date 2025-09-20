@@ -61,3 +61,7 @@ openapi:
       url: http://localhost:9897
       description: Local Development URL
 
+app:
+  sftp:
+    session-timeout: 30000
+    channel-timeout: 30000

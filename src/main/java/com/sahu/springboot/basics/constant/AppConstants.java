@@ -13,5 +13,6 @@ public class AppConstants {
     public final String PPK_KEY_PRIVATE_MAC = "Private-MAC";
 
     public final String PROPERTY_PRIVATE_KEY = "privateKey";
+    public final String PROPERTY_KEY_FORMAT = "keyFormat";
 
 }

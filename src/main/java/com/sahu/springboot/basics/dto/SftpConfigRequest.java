@@ -1,8 +1,7 @@
 package com.sahu.springboot.basics.dto;
 
 
-import com.sahu.springboot.basics.constant.AuthenticationType;
-import com.sahu.springboot.basics.constant.KeyFormat;
+import com.sahu.springboot.basics.validation.ValidRemoteDirectory;
 import com.sahu.springboot.basics.validation.ValidSftpConfigAuth;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,13 +16,14 @@ public record SftpConfigRequest(
         Integer port,
         @NotBlank(message = "Username is required")
         String username,
-        @NotNull(message = "Authentication type is required")
-        AuthenticationType authenticationType,
+        @NotBlank(message = "Authentication type is required")
+        String authenticationType,
         String password,
-        KeyFormat keyFormat,
+        String keyFormat,
         String privateKey,
         String passphrase,
         @NotBlank(message = "Remote directory is required")
+        @ValidRemoteDirectory
         String remoteDirectory
 )
 {

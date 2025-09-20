@@ -1,5 +1,7 @@
 package com.sahu.springboot.basics.service.util;
 
+import com.sahu.springboot.basics.constant.AuthenticationType;
+import com.sahu.springboot.basics.constant.KeyFormat;
 import com.sahu.springboot.basics.dto.SftpConfigRequest;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
 import com.sahu.springboot.basics.model.SftpConfig;
@@ -19,9 +21,9 @@ public class SftpConfigUtil {
                 .host(AseCryptUtil.encrypt(sftpConfigRequest.host(), salt))
                 .port(sftpConfigRequest.port())
                 .username(AseCryptUtil.encrypt(sftpConfigRequest.username(), salt))
-                .authenticationType(sftpConfigRequest.authenticationType())
+                .authenticationType(AuthenticationType.valueOf(sftpConfigRequest.authenticationType()))
                 .password(AseCryptUtil.encrypt(sftpConfigRequest.password(), salt))
-                .keyFormat(sftpConfigRequest.keyFormat())
+                .keyFormat(KeyFormat.valueOf(sftpConfigRequest.keyFormat()))
                 .privateKey(AseCryptUtil.encrypt(sftpConfigRequest.privateKey(), salt))
                 .passphrase(AseCryptUtil.encrypt(sftpConfigRequest.passphrase(), salt))
                 .remoteDirectory(sftpConfigRequest.remoteDirectory())
@@ -61,6 +63,10 @@ public class SftpConfigUtil {
                 .remoteDirectory(sftpConfig.getRemoteDirectory())
                 .active(sftpConfig.getActive())
                 .build();
+    }
+
+    public List<SftpConfigResponse> toDecryptSftpConfigResponseList(List<SftpConfig> sftpConfigList) {
+        return sftpConfigList.stream().map(SftpConfigUtil::toDecryptSftpConfigResponse).toList();
     }
 
 }

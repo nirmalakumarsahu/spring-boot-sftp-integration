@@ -46,5 +46,9 @@ public class SftpConfigServiceImpl implements SftpConfigService {
                 ));
     }
 
+    @Override
+    public List<SftpConfigResponse> getAllDecryptedSftpConfigs() {
+        return SftpConfigUtil.toDecryptSftpConfigResponseList(sftpConfigRepository.findAll());
+    }
 
 }
