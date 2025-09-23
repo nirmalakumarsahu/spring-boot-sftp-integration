@@ -20,5 +20,6 @@ public record SftpConfigResponse(
         String passphrase,
         String remoteDirectory,
         Boolean active
-) {
+)
+{
 }

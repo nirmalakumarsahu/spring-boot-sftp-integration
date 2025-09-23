@@ -1,12 +1,13 @@
 package com.sahu.springboot.basics.service;
 
+import com.sahu.springboot.basics.dto.SftpDirectoryResponse;
+
 import java.util.List;
-import java.util.Map;
 
 public interface FileReaderService {
-    Map<String, List<String>> getAllFileNames();
+    List<SftpDirectoryResponse> getAllFileNames();
 
-    Map<String, String> readAllFileContents(String sftpConfigName);
+    List<String> getFileNamesBySftpConfig(Long sftpConFigId);
 
-    String readFileByName(String sftpConfigName, String fileName);
+    String getFileContent(Long sftpConfigId, String fileName);
 }

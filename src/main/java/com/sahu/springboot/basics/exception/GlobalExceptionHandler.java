@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ApiResponse<String>> buildErrorResponse(HttpStatus httpStatus, String message, Object error) {
-        return  ApiResponse.error(
+        return ApiResponse.error(
                 httpStatus,
                 message,
                 error

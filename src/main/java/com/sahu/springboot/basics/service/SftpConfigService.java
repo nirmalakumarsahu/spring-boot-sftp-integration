@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface SftpConfigService {
     SftpConfigResponse createSftpConfig(SftpConfigRequest sftpConfigRequest);
+
     List<SftpConfigResponse> getAllSftpConfigs();
-    SftpConfigResponse getDecryptedSftpConfigByName(String name);
+
+    SftpConfigResponse getDecryptedSftpConfigById(Long id);
+
     List<SftpConfigResponse> getAllDecryptedSftpConfigs();
-    boolean existsByName(String name);
+
+    boolean existsById(Long id);
 }

@@ -38,11 +38,11 @@ public class SftpConfigServiceImpl implements SftpConfigService {
     }
 
     @Override
-    public SftpConfigResponse getDecryptedSftpConfigByName(String name) {
-        return sftpConfigRepository.findByNameAndActive(name, true)
+    public SftpConfigResponse getDecryptedSftpConfigById(Long id) {
+        return sftpConfigRepository.findByIdAndActive(id, true)
                 .map(SftpConfigUtil::toDecryptSftpConfigResponse)
                 .orElseThrow(() -> new SftpConfigNotFoundException(
-                        "Active SFTP Config not found with name " + name
+                        "Active SFTP Config not found with id " + id
                 ));
     }
 
@@ -52,8 +52,8 @@ public class SftpConfigServiceImpl implements SftpConfigService {
     }
 
     @Override
-    public boolean existsByName(String name) {
-        return sftpConfigRepository.existsByNameAndActive(name, true);
+    public boolean existsById(Long id) {
+        return !sftpConfigRepository.existsByIdAndActive(id, true);
     }
 
 }

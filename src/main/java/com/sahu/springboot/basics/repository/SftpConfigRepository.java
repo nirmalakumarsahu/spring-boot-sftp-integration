@@ -7,5 +7,8 @@ import java.util.Optional;
 
 public interface SftpConfigRepository extends JpaRepository<SftpConfig, Long> {
     boolean existsByNameAndActive(String name, Boolean active);
-    Optional<SftpConfig> findByNameAndActive(String name, Boolean active);
+
+    boolean existsByIdAndActive(Long id, Boolean active);
+
+    Optional<SftpConfig> findByIdAndActive(Long id, Boolean active);
 }

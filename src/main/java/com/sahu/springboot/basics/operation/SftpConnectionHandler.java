@@ -105,7 +105,7 @@ public class SftpConnectionHandler {
     public String readFileContentByName(ChannelSftp channelSftp, String remoteDirectory, String fileName) {
         try {
             log.info("Reading file: {} from remote directory: {}", fileName, remoteDirectory);
-            String filePath =  remoteDirectory + "/" + fileName;
+            String filePath = remoteDirectory + "/" + fileName;
             byte[] fileContentBytes = channelSftp.get(filePath).readAllBytes();
             String fileContent = new String(fileContentBytes, StandardCharsets.UTF_8);
             log.info("File: {} read successfully, size: {} bytes", fileName, fileContentBytes.length);

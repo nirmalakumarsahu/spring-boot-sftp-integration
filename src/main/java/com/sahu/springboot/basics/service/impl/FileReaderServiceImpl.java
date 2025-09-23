@@ -2,6 +2,7 @@ package com.sahu.springboot.basics.service.impl;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
+import com.sahu.springboot.basics.dto.SftpDirectoryResponse;
 import com.sahu.springboot.basics.exception.SftpException;
 import com.sahu.springboot.basics.operation.SftpConnectionHandler;
 import com.sahu.springboot.basics.service.FileReaderService;
@@ -11,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,7 +23,7 @@ public class FileReaderServiceImpl implements FileReaderService {
     private final SftpConnectionHandler sftpConnectionHandler;
 
     @Override
-    public Map<String, List<String>> getAllFileNames() {
+    public List<SftpDirectoryResponse> getAllFileNames() {
         log.info("Getting all file names from all active SFTP Configs");
         List<SftpConfigResponse> sftpConfigResponseList = sftpConfigService.getAllDecryptedSftpConfigs();
         if (Objects.isNull(sftpConfigResponseList) || sftpConfigResponseList.isEmpty()) {
@@ -32,42 +31,30 @@ public class FileReaderServiceImpl implements FileReaderService {
         }
 
         return sftpConfigResponseList.stream().filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                        SftpConfigResponse::name,
-                        sftpConfigResponse -> {
-                            ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
-                            return sftpConnectionHandler.readAllFileNamesFromRemoteDirectory(channelSftp, sftpConfigResponse.remoteDirectory());
-                        })
-                );
+                .map(sftpConfigResponse -> {
+                    ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
+                    List<String> fileNames = sftpConnectionHandler.readAllFileNamesFromRemoteDirectory(channelSftp, sftpConfigResponse.remoteDirectory());
+                    return SftpDirectoryResponse.builder()
+                            .sftpConfigName(sftpConfigResponse.name())
+                            .fileNames(fileNames)
+                            .build();
+                }).toList();
     }
 
     @Override
-    public Map<String, String> readAllFileContents(String sftpConfigName) {
-        log.info("Reading all files from all active SFTP Configs");
-        SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigByName(sftpConfigName);
-
+    public List<String> getFileNamesBySftpConfig(Long id) {
+        log.info("getSpecificSftpFileNames Started");
+        SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigById(id);
         ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
 
         //get all file names from the remote directory
-        List<String> fileNames = sftpConnectionHandler.readAllFileNamesFromRemoteDirectory(channelSftp, sftpConfigResponse.remoteDirectory());
-        if (Objects.isNull(fileNames) || fileNames.isEmpty()) {
-            log.warn("No files found in the remote directory {}", sftpConfigResponse.remoteDirectory());
-            throw new SftpException("No files found in the remote directory " + sftpConfigResponse.remoteDirectory());
-        }
-
-        return fileNames.stream().filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                                fileName -> fileName,
-                                fileName -> sftpConnectionHandler.readFileContentByName(channelSftp,
-                                        sftpConfigResponse.remoteDirectory(), fileName)
-                        )
-                );
+        return sftpConnectionHandler.readAllFileNamesFromRemoteDirectory(channelSftp, sftpConfigResponse.remoteDirectory());
     }
 
     @Override
-    public String readFileByName(String sftpConfigName, String fileName) {
-        log.info("Reading file {} from SFTP Config {}", fileName, sftpConfigName);
-        SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigByName(sftpConfigName);
+    public String getFileContent(Long sftpConfigId, String fileName) {
+        log.info("Reading file {} from SFTP Config {}", fileName, sftpConfigId);
+        SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigById(sftpConfigId);
 
         ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
 
