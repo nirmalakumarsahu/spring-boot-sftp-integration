@@ -14,5 +14,7 @@ public class AppConstants {
 
     public final String PROPERTY_PRIVATE_KEY = "privateKey";
     public final String PROPERTY_KEY_FORMAT = "keyFormat";
+    public final String PROPERTY_PASSWORD = "password";
+    public final String PROPERTY_AUTHENTICATION_TYPE = "authenticationType";
 
 }

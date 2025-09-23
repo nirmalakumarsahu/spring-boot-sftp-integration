@@ -18,7 +18,7 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         try {
             //Authentication type must be either PASSWORD or PRIVATE_KEY
             if (Objects.isNull(sftpConfigRequest.authenticationType()) || sftpConfigRequest.authenticationType().isBlank()) {
-                throw new IllegalArgumentException("Authentication type is required");
+                return false;
             }
             checkAuthenticationType(sftpConfigRequest.authenticationType(), context);
 
@@ -42,7 +42,7 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         } catch (IllegalArgumentException | NullPointerException e) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("authenticationType must be either PASSWORD or PRIVATE_KEY")
-                    .addPropertyNode("authenticationType")
+                    .addPropertyNode(AppConstants.PROPERTY_AUTHENTICATION_TYPE)
                     .addConstraintViolation();
             throw e;
         }
@@ -53,7 +53,7 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         if (Objects.isNull(sftpConfigRequest.password()) || sftpConfigRequest.password().isBlank()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("password must be provided when authenticationType is PASSWORD")
-                    .addPropertyNode("password")
+                    .addPropertyNode(AppConstants.PROPERTY_PASSWORD)
                     .addConstraintViolation();
             return false;
         }
@@ -89,7 +89,7 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         if (Objects.nonNull(sftpConfigRequest.password())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("password must be null when authenticationType is PRIVATE_KEY")
-                    .addPropertyNode("password")
+                    .addPropertyNode(AppConstants.PROPERTY_PASSWORD)
                     .addConstraintViolation();
             return false;
         }
@@ -118,29 +118,33 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         //Validate privateKey based on keyFormat
         if (sftpConfigRequest.keyFormat().equals(KeyFormat.PEM.name())) {
             //If keyFormat is PEM, privateKey must be a valid PEM key
-            return checkValidPemKey(sftpConfigRequest, context);
+            return checkValidPemKey(sftpConfigRequest.privateKey(), context);
         } else {
             //If keyFormat is PPK, privateKey must be a valid PPK key
-            return checkValidPpkKey(sftpConfigRequest, context);
+            return checkValidPpkKey(sftpConfigRequest.privateKey(), context);
         }
     }
 
     private void checkKeyFormat(String keyFormat, ConstraintValidatorContext context) {
         try {
+            if (Objects.isNull(keyFormat) || keyFormat.isBlank()) {
+                throw new IllegalArgumentException("keyFormat must be provided when authenticationType is PRIVATE_KEY");
+            }
+
             KeyFormat.valueOf(keyFormat);
         } catch (IllegalArgumentException | NullPointerException e) {
 
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("keyFormat must be either PEM or PPK when authenticationType is PRIVATE_KEY")
+            context.buildConstraintViolationWithTemplate("keyFormat must be either PEM or PPK")
                     .addPropertyNode(AppConstants.PROPERTY_KEY_FORMAT)
                     .addConstraintViolation();
             throw e;
         }
     }
 
-    private boolean checkValidPemKey(SftpConfigRequest sftpConfigRequest, ConstraintValidatorContext context) {
+    private boolean checkValidPemKey(String privateKey, ConstraintValidatorContext context) {
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(sftpConfigRequest.privateKey());
+            byte[] decodedBytes = Base64.getDecoder().decode(privateKey);
             String decodedPrivateKey = new String(decodedBytes, StandardCharsets.UTF_8);
 
             if (decodedPrivateKey.isBlank() || !decodedPrivateKey.startsWith(AppConstants.PEM_KEY_BEGIN) ||
@@ -162,9 +166,9 @@ public class SftpConfigAuthValidator implements ConstraintValidator<ValidSftpCon
         }
     }
 
-    private boolean checkValidPpkKey(SftpConfigRequest sftpConfigRequest, ConstraintValidatorContext context) {
+    private boolean checkValidPpkKey(String privateKey, ConstraintValidatorContext context) {
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(sftpConfigRequest.privateKey());
+            byte[] decodedBytes = Base64.getDecoder().decode(privateKey);
             String decodedPrivateKey = new String(decodedBytes, StandardCharsets.UTF_8);
 
             if (decodedPrivateKey.isBlank() || !decodedPrivateKey.startsWith(AppConstants.PPK_KEY_BEGIN) ||
