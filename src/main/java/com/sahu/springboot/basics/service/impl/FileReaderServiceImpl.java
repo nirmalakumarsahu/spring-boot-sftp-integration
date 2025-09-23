@@ -3,6 +3,7 @@ package com.sahu.springboot.basics.service.impl;
 import com.jcraft.jsch.ChannelSftp;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
 import com.sahu.springboot.basics.dto.SftpDirectoryResponse;
+import com.sahu.springboot.basics.exception.SftpConfigNotFoundException;
 import com.sahu.springboot.basics.exception.SftpException;
 import com.sahu.springboot.basics.operation.SftpConnectionHandler;
 import com.sahu.springboot.basics.service.FileReaderService;
@@ -44,6 +45,10 @@ public class FileReaderServiceImpl implements FileReaderService {
     @Override
     public List<String> getFileNamesBySftpConfig(Long id) {
         log.info("getSpecificSftpFileNames Started");
+        if (!sftpConfigService.existsById(id)) {
+            throw new SftpConfigNotFoundException("Active SFTP Config not found with id " + id);
+        }
+
         SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigById(id);
         ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
 
@@ -54,6 +59,10 @@ public class FileReaderServiceImpl implements FileReaderService {
     @Override
     public String getFileContent(Long sftpConfigId, String fileName) {
         log.info("Reading file {} from SFTP Config {}", fileName, sftpConfigId);
+        if (!sftpConfigService.existsById(sftpConfigId)) {
+            throw new SftpConfigNotFoundException("Active SFTP Config not found with id " + sftpConfigId);
+        }
+
         SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigById(sftpConfigId);
 
         ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);

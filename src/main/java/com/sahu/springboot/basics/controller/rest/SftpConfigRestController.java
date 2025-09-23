@@ -4,14 +4,12 @@ import com.sahu.springboot.basics.dto.ApiResponse;
 import com.sahu.springboot.basics.dto.SftpConfigRequest;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
 import com.sahu.springboot.basics.service.SftpConfigService;
-import com.sahu.springboot.basics.util.SftpKeyConvertorUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,16 +33,14 @@ public class SftpConfigRestController {
                 sftpConfigService.createSftpConfig(sftpConfigRequest));
     }
 
-    @PostMapping("/convert-pem-key")
-    public ResponseEntity<ApiResponse<String>> convertPemKey(@RequestParam MultipartFile pemFile) {
-        return ApiResponse.success(HttpStatus.OK, "PEM Key Converted Successfully",
-                SftpKeyConvertorUtil.convertPemKey(pemFile));
+    @PatchMapping("/{sftpConfigId}/deactivate")
+    public ResponseEntity<ApiResponse<String>> deactivateSftpConfig(@PathVariable Long sftpConfigId) {
+        return null;
     }
 
-    @PostMapping("/convert-ppk-key")
-    public ResponseEntity<ApiResponse<String>> convertPpkKey(@RequestParam MultipartFile ppkFile) {
-        return ApiResponse.success(HttpStatus.OK, "PPK Key Converted Successfully",
-                SftpKeyConvertorUtil.convertPpkKey(ppkFile));
+    @PatchMapping("/{sftpConfigId}/activate")
+    public ResponseEntity<ApiResponse<String>> activateSftpConfig(@PathVariable Long sftpConfigId) {
+        return null;
     }
 
 }

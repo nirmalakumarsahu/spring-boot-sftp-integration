@@ -2,7 +2,6 @@ package com.sahu.springboot.basics.controller.rest;
 
 import com.sahu.springboot.basics.dto.ApiResponse;
 import com.sahu.springboot.basics.dto.SftpDirectoryResponse;
-import com.sahu.springboot.basics.exception.SftpConfigNotFoundException;
 import com.sahu.springboot.basics.service.FileReaderService;
 import com.sahu.springboot.basics.service.SftpConfigService;
 import lombok.RequiredArgsConstructor;
@@ -32,21 +31,13 @@ public class SftpFileRestController {
     }
 
     @GetMapping("/{sftpConfigId}/file-names")
-    public ResponseEntity<ApiResponse<List<String>>> getFileNamesBySftpConfig(@PathVariable Long sftpConFigId) {
-        if (sftpConfigService.existsById(sftpConFigId)) {
-            throw new SftpConfigNotFoundException("Active SFTP Config not found with id " + sftpConFigId);
-        }
-
+    public ResponseEntity<ApiResponse<List<String>>> getFileNamesBySftpConfig(@PathVariable Long sftpConfigId) {
         return ApiResponse.success(HttpStatus.OK, "File names Retrieved from given SFTP Successfully",
-                fileReaderService.getFileNamesBySftpConfig(sftpConFigId));
+                fileReaderService.getFileNamesBySftpConfig(sftpConfigId));
     }
 
     @GetMapping("/{sftpConfigId}/{fileName}")
-    public ResponseEntity<ApiResponse<String>> getFileContent(Long sftpConfigId, String fileName) {
-        if (sftpConfigService.existsById(sftpConfigId)) {
-            throw new SftpConfigNotFoundException("Active SFTP Config not found with id " + sftpConfigId);
-        }
-
+    public ResponseEntity<ApiResponse<String>> getFileContent(@PathVariable Long sftpConfigId, @PathVariable String fileName) {
         return ApiResponse.success(HttpStatus.OK, "File Contents Retrieved Successfully",
                 fileReaderService.getFileContent(sftpConfigId, fileName));
     }
