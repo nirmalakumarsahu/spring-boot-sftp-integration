@@ -5,7 +5,7 @@ import jakarta.validation.Constraint;
 import java.lang.annotation.*;
 
 @Documented
-@Target(ElementType.METHOD)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = RemoteDirectoryValidator.class)
 public @interface ValidRemoteDirectory {
