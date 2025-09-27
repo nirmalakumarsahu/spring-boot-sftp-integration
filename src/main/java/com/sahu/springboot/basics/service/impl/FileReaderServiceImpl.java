@@ -64,7 +64,6 @@ public class FileReaderServiceImpl implements FileReaderService {
         }
 
         SftpConfigResponse sftpConfigResponse = sftpConfigService.getDecryptedSftpConfigById(sftpConfigId);
-
         ChannelSftp channelSftp = sftpConnectionHandler.createSftpChannel(sftpConfigResponse);
 
         return sftpConnectionHandler.readFileContentByName(channelSftp, sftpConfigResponse.remoteDirectory(), fileName);

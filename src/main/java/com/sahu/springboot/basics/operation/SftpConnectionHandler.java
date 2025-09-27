@@ -62,7 +62,7 @@ public class SftpConnectionHandler {
 
             return channelSftp;
         } catch (Exception e) {
-            log.error("Error while creating SFTP channel: {}", e.getMessage());
+            log.error("❌ Error while creating SFTP channel: {}", e.getMessage());
             throw new SftpException("Failed to create SFTP channel " + e.getMessage());
         }
     }
@@ -79,7 +79,7 @@ public class SftpConnectionHandler {
                     log.info("✅ SFTP session disconnected");
                 }
             } catch (Exception e) {
-                log.error("Error while disconnecting SFTP channel/session: {}", e.getMessage());
+                log.error("❌ Error while disconnecting SFTP channel/session: {}", e.getMessage());
             }
         }
     }
@@ -96,7 +96,7 @@ public class SftpConnectionHandler {
             log.info("Total {} files found in remote directory: {}", fileNames.size(), remoteDirectory);
             return fileNames;
         } catch (Exception e) {
-            log.error("Error while reading files from SFTP server: {}", e.getMessage());
+            log.error("❌ Error while reading files from SFTP server: {}", e.getMessage());
             disconnectSftpChannel(channelSftp);
             throw new SftpException("Failed to read files from SFTP server " + e.getMessage());
         }

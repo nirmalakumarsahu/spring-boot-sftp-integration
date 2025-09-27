@@ -53,7 +53,7 @@ public class SftpConfigServiceImpl implements SftpConfigService {
 
     @Override
     public boolean existsById(Long id) {
-        return !sftpConfigRepository.existsByIdAndActive(id, true);
+        return sftpConfigRepository.existsByIdAndActive(id, true);
     }
 
 }

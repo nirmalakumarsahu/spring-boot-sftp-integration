@@ -3,13 +3,13 @@ package com.sahu.springboot.basics.model;
 import com.sahu.springboot.basics.constant.AuthenticationType;
 import com.sahu.springboot.basics.constant.KeyFormat;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "sftp_configs")
