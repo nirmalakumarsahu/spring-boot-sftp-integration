@@ -5,7 +5,7 @@ import com.sahu.springboot.basics.constant.KeyFormat;
 import com.sahu.springboot.basics.dto.SftpConfigRequest;
 import com.sahu.springboot.basics.dto.SftpConfigResponse;
 import com.sahu.springboot.basics.model.SftpConfig;
-import com.sahu.springboot.basics.util.AseCryptUtil;
+import com.sahu.springboot.basics.util.AesCryptUtil;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -14,18 +14,18 @@ import java.util.List;
 public class SftpConfigUtil {
 
     public SftpConfig toSftpConfig(SftpConfigRequest sftpConfigRequest) {
-        String salt = AseCryptUtil.generateSecretKey();
+        String salt = AesCryptUtil.generateSecretKey();
 
         return SftpConfig.builder()
                 .name(sftpConfigRequest.name())
-                .host(AseCryptUtil.encrypt(sftpConfigRequest.host(), salt))
+                .host(AesCryptUtil.encrypt(sftpConfigRequest.host(), salt))
                 .port(sftpConfigRequest.port())
-                .username(AseCryptUtil.encrypt(sftpConfigRequest.username(), salt))
+                .username(AesCryptUtil.encrypt(sftpConfigRequest.username(), salt))
                 .authenticationType(AuthenticationType.valueOf(sftpConfigRequest.authenticationType()))
-                .password(AseCryptUtil.encrypt(sftpConfigRequest.password(), salt))
+                .password(AesCryptUtil.encrypt(sftpConfigRequest.password(), salt))
                 .keyFormat(KeyFormat.valueOf(sftpConfigRequest.keyFormat()))
-                .privateKey(AseCryptUtil.encrypt(sftpConfigRequest.privateKey(), salt))
-                .passphrase(AseCryptUtil.encrypt(sftpConfigRequest.passphrase(), salt))
+                .privateKey(AesCryptUtil.encrypt(sftpConfigRequest.privateKey(), salt))
+                .passphrase(AesCryptUtil.encrypt(sftpConfigRequest.passphrase(), salt))
                 .remoteDirectory(sftpConfigRequest.remoteDirectory())
                 .salt(salt)
                 .active(true)
@@ -52,14 +52,14 @@ public class SftpConfigUtil {
         return SftpConfigResponse.builder()
                 .id(sftpConfig.getId())
                 .name(sftpConfig.getName())
-                .host(AseCryptUtil.decrypt(sftpConfig.getHost(), salt))
+                .host(AesCryptUtil.decrypt(sftpConfig.getHost(), salt))
                 .port(sftpConfig.getPort())
-                .username(AseCryptUtil.decrypt(sftpConfig.getUsername(), salt))
+                .username(AesCryptUtil.decrypt(sftpConfig.getUsername(), salt))
                 .authenticationType(sftpConfig.getAuthenticationType())
-                .password(AseCryptUtil.decrypt(sftpConfig.getPassword(), salt))
+                .password(AesCryptUtil.decrypt(sftpConfig.getPassword(), salt))
                 .keyFormat(sftpConfig.getKeyFormat())
-                .privateKey(AseCryptUtil.decrypt(sftpConfig.getPrivateKey(), salt))
-                .passphrase(AseCryptUtil.decrypt(sftpConfig.getPassphrase(), salt))
+                .privateKey(AesCryptUtil.decrypt(sftpConfig.getPrivateKey(), salt))
+                .passphrase(AesCryptUtil.decrypt(sftpConfig.getPassphrase(), salt))
                 .remoteDirectory(sftpConfig.getRemoteDirectory())
                 .active(sftpConfig.getActive())
                 .build();

@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Slf4j
 @UtilityClass
-public class AseCryptUtil {
+public class AesCryptUtil {
 
     private final String ALGORITHM = "AES/GCM/NoPadding";
     private final String ALGORITHM_INSTANCE = "AES";
